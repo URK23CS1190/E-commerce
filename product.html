@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product — NOIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="grain"></div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">Collections</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+    </div>
+    <a href="index.html" class="logo">NOIR</a>
+    <div class="nav-right">
+      <a href="#" class="nav-link">About</a>
+      <a href="cart.html" class="nav-link cart-icon">
+        <span>Cart</span>
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="product-detail" id="product-detail">
+    <!-- Injected by JS -->
+  </div>
+
+  <!-- Related Products -->
+  <section class="featured" style="margin-top:0;">
+    <div class="section-header">
+      <span class="section-label">More</span>
+      <h2 class="section-title">You May Also Like</h2>
+    </div>
+    <div class="products-grid" id="related-grid"></div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>© 2024 NOIR Luxury. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'));
+    const product = products.find(p => p.id === id);
+
+    if (product) {
+      document.title = `${product.name} — NOIR`;
+      document.getElementById('product-detail').innerHTML = `
+        <div class="pd-breadcrumb">
+          <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span>${product.name}</span>
+        </div>
+        <div class="pd-layout">
+          <div class="pd-image">
+            <div class="pd-img-box" style="background: ${product.bg};">
+              <div class="pd-img-icon">${product.icon}</div>
+              ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+            </div>
+          </div>
+          <div class="pd-info">
+            <p class="pd-category">${product.category.toUpperCase()}</p>
+            <h1 class="pd-name">${product.name}</h1>
+            <p class="pd-price">₹${product.price.toLocaleString()}</p>
+            <p class="pd-desc">${product.description}</p>
+            <div class="pd-sizes">
+              <p class="pd-label">Select Size</p>
+              <div class="size-options">
+                ${['XS','S','M','L','XL'].map(s => `<button class="size-btn" onclick="selectSize(this,'${s}')">${s}</button>`).join('')}
+              </div>
+            </div>
+            <div class="pd-qty">
+              <p class="pd-label">Quantity</p>
+              <div class="qty-controls">
+                <button onclick="changeQty(-1)">−</button>
+                <span id="qty-display">1</span>
+                <button onclick="changeQty(1)">+</button>
+              </div>
+            </div>
+            <button class="btn-primary pd-add" onclick="addToCartDetail(${product.id})">Add to Cart</button>
+            <div class="pd-features">
+              <div class="pd-feat"><span>✓</span> Free shipping above ₹5,000</div>
+              <div class="pd-feat"><span>✓</span> 30-day free returns</div>
+              <div class="pd-feat"><span>✓</span> Authenticity guaranteed</div>
+              <div class="pd-feat"><span>✓</span> Sustainably sourced</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Related products
+      const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+      document.getElementById('related-grid').innerHTML = related.map(p => productCard(p)).join('');
+    }
+
+    let currentQty = 1;
+    let selectedSize = 'M';
+
+    function selectSize(el, size) {
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      selectedSize = size;
+    }
+
+    function changeQty(delta) {
+      currentQty = Math.max(1, currentQty + delta);
+      document.getElementById('qty-display').textContent = currentQty;
+    }
+
+    function addToCartDetail(id) {
+      const p = products.find(x => x.id === id);
+      const cart = getCart();
+      const existing = cart.find(x => x.id === id);
+      if (existing) existing.qty += currentQty;
+      else cart.push({ ...p, qty: currentQty });
+      saveCart(cart);
+      updateCartCount();
+      showToast(`${p.name} added to cart!`);
+    }
+  </script>
+</body>
+</html>

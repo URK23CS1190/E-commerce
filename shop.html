@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop — NOIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="grain"></div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">Collections</a>
+      <a href="shop.html" class="nav-link active">Shop</a>
+    </div>
+    <a href="index.html" class="logo">NOIR</a>
+    <div class="nav-right">
+      <a href="#" class="nav-link">About</a>
+      <a href="cart.html" class="nav-link cart-icon">
+        <span>Cart</span>
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <h1 class="page-title">The Collection</h1>
+    <p class="page-sub">Every piece, carefully chosen.</p>
+  </div>
+
+  <section class="shop-section">
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filters">
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="apparel">Apparel</button>
+        <button class="filter-btn" data-cat="accessories">Accessories</button>
+        <button class="filter-btn" data-cat="footwear">Footwear</button>
+      </div>
+      <div class="sort-wrap">
+        <select class="sort-select" id="sort-select">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Results count -->
+    <p class="results-count" id="results-count">Showing all products</p>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="shop-grid"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h2 class="logo">NOIR</h2>
+        <p>Curated luxury for those who<br>know the value of silence.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <a href="shop.html">All Products</a>
+          <a href="#">Apparel</a>
+          <a href="#">Accessories</a>
+          <a href="#">Footwear</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="#">FAQ</a>
+          <a href="#">Shipping</a>
+          <a href="#">Returns</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 NOIR Luxury. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let currentCat = 'all';
+    let currentSort = 'default';
+
+    // Check URL for category
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('cat')) {
+      currentCat = params.get('cat');
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.cat === currentCat);
+      });
+    }
+
+    function renderShop() {
+      let list = [...products];
+      if (currentCat !== 'all') list = list.filter(p => p.category === currentCat);
+      if (currentSort === 'price-asc') list.sort((a,b) => a.price - b.price);
+      if (currentSort === 'price-desc') list.sort((a,b) => b.price - a.price);
+      if (currentSort === 'name') list.sort((a,b) => a.name.localeCompare(b.name));
+      const grid = document.getElementById('shop-grid');
+      grid.innerHTML = list.map(p => productCard(p)).join('');
+      document.getElementById('results-count').textContent = `Showing ${list.length} product${list.length !== 1 ? 's' : ''}`;
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCat = btn.dataset.cat;
+        renderShop();
+      });
+    });
+
+    document.getElementById('sort-select').addEventListener('change', e => {
+      currentSort = e.target.value;
+      renderShop();
+    });
+
+    renderShop();
+  </script>
+</body>
+</html>
