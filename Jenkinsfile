@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = '-username/ecommerce-noir'
+        IMAGE_NAME = 'alfinjones/ecommerce-noir'
         DOCKER_CREDS = credentials('dockerhub-creds')
         KUBECONFIG = '/var/jenkins_home/.kube/config'
     }
