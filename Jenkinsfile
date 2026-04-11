@@ -4,12 +4,10 @@ pipeline {
     environment {
         IMAGE_NAME = 'alfinjones/ecommerce-noir'
         DOCKER_CREDS = credentials('dockerhub-creds')
-        KUBECONFIG = '/var/jenkins_home/.kube/config'
     }
 
     stages {
         stage('Checkout') {
-            docker exec jenkins kubectl --kubeconfig=/var/jenkins_home/.kube/config get nodes
             steps {
                 checkout scm
             }
@@ -32,7 +30,6 @@ pipeline {
                 sh 'docker push $IMAGE_NAME:latest'
             }
         }
-
     }
 
     post {
