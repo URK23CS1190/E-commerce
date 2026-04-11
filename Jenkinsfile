@@ -9,6 +9,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
+            docker exec jenkins kubectl --kubeconfig=/var/jenkins_home/.kube/config get nodes
             steps {
                 checkout scm
             }
@@ -32,16 +33,6 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                export KUBECONFIG=/var/jenkins_home/.kube/config
-                kubectl apply -f k8s/deployment.yaml
-                kubectl apply -f k8s/service.yaml
-                kubectl rollout status deployment/ecommerce-deployment
-                '''
-            }
-        }
     }
 
     post {
