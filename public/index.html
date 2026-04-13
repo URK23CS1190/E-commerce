@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NOIR — Luxury E-Commerce</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Grain Overlay -->
+  <div class="grain"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">Collections</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+    </div>
+    <a href="index.html" class="logo">NOIR</a>
+    <div class="nav-right">
+      <a href="#" class="nav-link">About</a>
+      <a href="admin-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="cart.html" class="nav-link cart-icon">
+        <span>Cart</span>
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-sub">New Season Arrival</p>
+      <h1 class="hero-title">Crafted for<br><em>the Discerning</em></h1>
+      <p class="hero-desc">Luxury pieces designed with intention. Timeless silhouettes for the modern connoisseur.</p>
+      <a href="shop.html" class="btn-primary">Explore Collection</a>
+    </div>
+    <div class="hero-scroll">Scroll ↓</div>
+  </section>
+
+  <!-- Featured Categories -->
+  <section class="categories">
+    <div class="section-header">
+      <span class="section-label">Curated</span>
+      <h2 class="section-title">Shop by Category</h2>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card cat-large" onclick="window.location='shop.html?cat=apparel'">
+        <div class="cat-img" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+          <div class="cat-decoration">✦</div>
+        </div>
+        <div class="cat-info">
+          <h3>Apparel</h3>
+          <span>42 Items →</span>
+        </div>
+      </div>
+      <div class="cat-card" onclick="window.location='shop.html?cat=accessories'">
+        <div class="cat-img" style="background: linear-gradient(135deg, #2d1b00 0%, #5c3d11 100%);">
+          <div class="cat-decoration">◈</div>
+        </div>
+        <div class="cat-info">
+          <h3>Accessories</h3>
+          <span>28 Items →</span>
+        </div>
+      </div>
+      <div class="cat-card" onclick="window.location='shop.html?cat=footwear'">
+        <div class="cat-img" style="background: linear-gradient(135deg, #1a1a1a 0%, #3d2b1f 100%);">
+          <div class="cat-decoration">⬡</div>
+        </div>
+        <div class="cat-info">
+          <h3>Footwear</h3>
+          <span>19 Items →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Member CTA -->
+  <div class="member-cta">
+    <p class="member-cta-label">Exclusive Access</p>
+    <h2 class="member-cta-title">Already a Member?</h2>
+    <p class="member-cta-desc">Sign in to track your orders, save favourites, and access member-only collections.</p>
+    <a href="login.html" class="btn-primary" style="animation:none;">Sign In to Your Account</a>
+  </div>
+
+  <!-- Featured Products -->
+  <section class="featured">
+    <div class="section-header">
+      <span class="section-label">Bestsellers</span>
+      <h2 class="section-title">Featured Pieces</h2>
+      <a href="shop.html" class="view-all">View All →</a>
+    </div>
+    <div class="products-grid" id="featured-grid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- Banner -->
+  <section class="mid-banner">
+    <div class="banner-content">
+      <p class="banner-label">The Philosophy</p>
+      <h2>"Less, but better.<br><em>Always better."</em></h2>
+      <p>Every piece in our collection is chosen for its craftsmanship, longevity, and silent elegance. We believe in owning fewer, finer things.</p>
+      <a href="shop.html" class="btn-outline">Discover More</a>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee-wrap">
+    <div class="marquee">
+      <span>Free shipping on orders above ₹5,000 &nbsp;✦&nbsp; New Arrivals Every Friday &nbsp;✦&nbsp; Handcrafted Luxury &nbsp;✦&nbsp; Sustainable Materials &nbsp;✦&nbsp; Free Returns &nbsp;✦&nbsp; Exclusive Members Offer &nbsp;✦&nbsp;</span>
+      <span>Free shipping on orders above ₹5,000 &nbsp;✦&nbsp; New Arrivals Every Friday &nbsp;✦&nbsp; Handcrafted Luxury &nbsp;✦&nbsp; Sustainable Materials &nbsp;✦&nbsp; Free Returns &nbsp;✦&nbsp; Exclusive Members Offer &nbsp;✦&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h2 class="logo">NOIR</h2>
+        <p>Curated luxury for those who<br>know the value of silence.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <a href="shop.html">All Products</a>
+          <a href="shop.html?cat=apparel">Apparel</a>
+          <a href="shop.html?cat=accessories">Accessories</a>
+          <a href="shop.html?cat=footwear">Footwear</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About NOIR</a>
+          <a href="#">Sustainability</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="#">FAQ</a>
+          <a href="#">Shipping Policy</a>
+          <a href="#">Returns</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 NOIR Luxury. All rights reserved.</p>
+      <p>Designed with intention.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Render featured products
+    const grid = document.getElementById('featured-grid');
+    const featured = products.slice(0, 4);
+    featured.forEach(p => {
+      grid.innerHTML += productCard(p);
+    });
+  </script>
+</body>
+</html>

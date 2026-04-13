@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — NOIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#0a0a0a; --bg2:#111111; --surface:#141414;
+      --border:rgba(255,255,255,0.08); --border-gold:rgba(201,169,110,0.3);
+      --text:#e8e4dc; --text-muted:#7a7570; --text-dim:#4a4642;
+      --gold:#c9a96e; --gold-light:#e8c992; --gold-dark:#8a6f3e;
+      --white:#f5f2ed;
+      --font-serif:'Cormorant Garamond',Georgia,serif;
+      --font-sans:'Montserrat',sans-serif;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:var(--font-sans);
+      font-weight:300;
+      font-size:14px;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* ── Grain ── */
+    .grain{
+      position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.035;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:200px;
+    }
+
+    /* ── Page layout ── */
+    .login-page{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      min-height:100vh;
+    }
+
+    /* ── Left decorative panel ── */
+    .panel-left{
+      position:relative;
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+      background: linear-gradient(135deg,#080808 0%,#0d0d18 50%,#080808 100%);
+      border-right:1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Animated grid background */
+    .panel-left::before{
+      content:'';
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(201,169,110,0.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(201,169,110,0.04) 1px,transparent 1px);
+      background-size:60px 60px;
+      animation:gridSlide 20s linear infinite;
+    }
+    @keyframes gridSlide{
+      0%{background-position:0 0;}
+      100%{background-position:60px 60px;}
+    }
+
+    /* Radial glow that pulses */
+    .panel-left::after{
+      content:'';
+      position:absolute;
+      width:500px;height:500px;
+      border-radius:50%;
+      background:radial-gradient(ellipse,rgba(201,169,110,0.07) 0%,transparent 70%);
+      animation:glowPulse 6s ease-in-out infinite;
+    }
+    @keyframes glowPulse{
+      0%,100%{transform:scale(1);opacity:0.6;}
+      50%{transform:scale(1.2);opacity:1;}
+    }
+
+    .panel-left-inner{
+      position:relative;z-index:2;
+      text-align:center;
+      padding:3rem;
+      animation:fadeInLeft 1s ease 0.2s both;
+    }
+    @keyframes fadeInLeft{
+      from{opacity:0;transform:translateX(-30px);}
+      to{opacity:1;transform:translateX(0);}
+    }
+
+    /* Animated logo letters */
+    .brand-logo{
+      display:block;
+      font-family:var(--font-serif);
+      font-size:5rem;
+      font-weight:300;
+      letter-spacing:0.8em;
+      color:var(--gold);
+      text-transform:uppercase;
+      margin-bottom:0.5rem;
+      position:relative;
+    }
+    .brand-logo span{
+      display:inline-block;
+      animation:letterFloat 3s ease-in-out infinite;
+    }
+    .brand-logo span:nth-child(1){animation-delay:0s;}
+    .brand-logo span:nth-child(2){animation-delay:0.15s;}
+    .brand-logo span:nth-child(3){animation-delay:0.3s;}
+    .brand-logo span:nth-child(4){animation-delay:0.45s;}
+    @keyframes letterFloat{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-6px);}
+    }
+
+    .brand-tagline{
+      font-size:0.6rem;letter-spacing:0.5em;text-transform:uppercase;
+      color:var(--text-dim);margin-bottom:4rem;
+    }
+
+    /* Floating decorative rings */
+    .ring{
+      position:absolute;border-radius:50%;
+      border:1px solid rgba(201,169,110,0.12);
+      animation:ringExpand 8s ease-in-out infinite;
+    }
+    .ring:nth-child(1){width:200px;height:200px;animation-delay:0s;}
+    .ring:nth-child(2){width:320px;height:320px;animation-delay:2s;}
+    .ring:nth-child(3){width:440px;height:440px;animation-delay:4s;}
+    @keyframes ringExpand{
+      0%,100%{opacity:0.3;transform:scale(1);}
+      50%{opacity:0.7;transform:scale(1.05);}
+    }
+
+    .panel-quote{
+      font-family:var(--font-serif);
+      font-size:1.5rem;font-style:italic;font-weight:300;
+      color:var(--text-muted);line-height:1.7;max-width:300px;margin:0 auto;
+    }
+    .panel-quote em{color:var(--gold-light);font-style:italic;}
+
+    /* Scrolling feature bullets */
+    .features-scroll{
+      margin-top:3rem;
+      overflow:hidden;height:1.6rem;
+    }
+    .features-inner{
+      display:flex;flex-direction:column;
+      animation:scrollFeatures 9s ease-in-out infinite;
+    }
+    @keyframes scrollFeatures{
+      0%,25%{transform:translateY(0);}
+      33%,58%{transform:translateY(-1.6rem);}
+      66%,91%{transform:translateY(-3.2rem);}
+      100%{transform:translateY(0);}
+    }
+    .feature-line{
+      height:1.6rem;display:flex;align-items:center;justify-content:center;
+      font-size:0.65rem;letter-spacing:0.2em;color:var(--text-dim);
+      text-transform:uppercase;white-space:nowrap;
+    }
+    .feature-line span{color:var(--gold);margin-right:0.6rem;}
+
+    /* ── Right form panel ── */
+    .panel-right{
+      display:flex;align-items:center;justify-content:center;
+      background:var(--bg);
+      padding:3rem 2rem;
+    }
+
+    .form-wrap{
+      width:100%;max-width:380px;
+      animation:fadeInRight 0.9s ease 0.3s both;
+    }
+    @keyframes fadeInRight{
+      from{opacity:0;transform:translateX(30px);}
+      to{opacity:1;transform:translateX(0);}
+    }
+
+    .form-label{
+      display:block;font-size:0.58rem;letter-spacing:0.5em;
+      text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;
+    }
+    .form-title{
+      font-family:var(--font-serif);font-size:2.6rem;font-weight:300;
+      color:var(--white);line-height:1.1;margin-bottom:0.6rem;
+    }
+    .form-subtitle{
+      font-size:0.8rem;color:var(--text-muted);
+      line-height:1.9;margin-bottom:2.5rem;
+    }
+
+    /* Animated underline on title */
+    .form-title-line{
+      display:block;
+      height:1px;
+      background:linear-gradient(90deg,var(--gold),transparent);
+      width:0;
+      transition:width 1s ease 0.8s;
+      margin-bottom:1.5rem;
+    }
+    .form-wrap.visible .form-title-line{width:80px;}
+
+    /* Input groups */
+    .field{margin-bottom:1.2rem;}
+    .field label{
+      display:block;font-size:0.58rem;letter-spacing:0.2em;
+      text-transform:uppercase;color:var(--text-dim);margin-bottom:0.5rem;
+    }
+    .field input{
+      width:100%;
+      background:var(--surface);
+      border:1px solid var(--border);
+      color:var(--text);
+      font-family:var(--font-sans);font-size:0.85rem;font-weight:300;
+      padding:0.9rem 1.2rem;
+      outline:none;
+      border-radius:2px;
+      transition:border-color 0.3s,box-shadow 0.3s,background 0.3s;
+      letter-spacing:0.03em;
+    }
+    .field input::placeholder{color:var(--text-dim);}
+    .field input:focus{
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(201,169,110,0.07);
+      background:#181818;
+    }
+
+    /* Submit button with shimmer */
+    .btn-submit{
+      width:100%;margin-top:0.8rem;
+      padding:1rem 2rem;
+      background:var(--gold);color:#000;
+      font-family:var(--font-sans);font-size:0.65rem;font-weight:500;
+      letter-spacing:0.25em;text-transform:uppercase;
+      border:none;border-radius:2px;cursor:pointer;
+      position:relative;overflow:hidden;
+      transition:background 0.3s,transform 0.2s,box-shadow 0.3s;
+    }
+    .btn-submit::after{
+      content:'';
+      position:absolute;top:0;left:-100%;width:60%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);
+      animation:shimmer 2.5s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{left:-100%;}100%{left:200%;}
+    }
+    .btn-submit:hover:not(:disabled){
+      background:var(--gold-light);
+      transform:translateY(-2px);
+      box-shadow:0 10px 30px rgba(201,169,110,0.25);
+    }
+    .btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+
+    /* Outline sign-out button */
+    .btn-outline-form{
+      width:100%;margin-top:0.8rem;
+      padding:0.9rem 2rem;
+      background:transparent;
+      color:var(--gold);
+      font-family:var(--font-sans);font-size:0.65rem;font-weight:400;
+      letter-spacing:0.25em;text-transform:uppercase;
+      border:1px solid var(--border-gold);border-radius:2px;cursor:pointer;
+      transition:background 0.3s,border-color 0.3s;
+    }
+    .btn-outline-form:hover{background:rgba(201,169,110,0.06);border-color:var(--gold);}
+
+    /* Divider */
+    .divider{
+      text-align:center;margin:1.2rem 0;position:relative;
+    }
+    .divider::before{
+      content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);
+    }
+    .divider span{
+      background:var(--bg);padding:0 1rem;
+      font-size:0.58rem;letter-spacing:0.2em;color:var(--text-dim);position:relative;
+    }
+
+    /* Message */
+    .msg{
+      margin-top:1.2rem;padding:0.9rem 1.2rem;border-radius:2px;
+      font-size:0.75rem;letter-spacing:0.04em;
+      display:none;text-align:center;
+      animation:msgSlide 0.4s ease;
+    }
+    @keyframes msgSlide{
+      from{opacity:0;transform:translateY(-8px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+    .msg.success{
+      display:block;
+      background:rgba(201,169,110,0.08);border:1px solid var(--border-gold);
+      color:var(--gold-light);
+    }
+    .msg.error{
+      display:block;
+      background:rgba(180,50,50,0.08);border:1px solid rgba(180,50,50,0.3);
+      color:#e08080;
+    }
+
+    /* Back link */
+    .back-row{
+      margin-top:2rem;text-align:center;
+      font-size:0.7rem;color:var(--text-dim);
+    }
+    .back-row a{
+      color:var(--gold);text-decoration:none;letter-spacing:0.1em;
+      transition:color 0.3s;
+    }
+    .back-row a:hover{color:var(--gold-light);}
+
+    /* Loading spinner overlay */
+    .spinner-overlay{
+      position:fixed;inset:0;background:rgba(10,10,10,0.8);
+      display:none;align-items:center;justify-content:center;z-index:500;
+    }
+    .spinner-overlay.show{display:flex;}
+    .spinner{
+      width:40px;height:40px;border-radius:50%;
+      border:2px solid var(--border);border-top-color:var(--gold);
+      animation:spin 0.8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* Particles canvas */
+    #particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
+
+    @media(max-width:768px){
+      .login-page{grid-template-columns:1fr;}
+      .panel-left{display:none;}
+      .panel-right{padding:2rem 1.5rem;min-height:100vh;}
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <canvas id="particles"></canvas>
+
+  <div class="spinner-overlay" id="spinner">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="login-page">
+
+    <!-- Left panel -->
+    <div class="panel-left">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+
+      <div class="panel-left-inner">
+        <span class="brand-logo">
+          <span>N</span><span>O</span><span>I</span><span>R</span>
+        </span>
+        <p class="brand-tagline">Luxury E-Commerce</p>
+
+        <p class="panel-quote">
+          "True elegance is<br><em>refusal.</em>"
+        </p>
+
+        <div class="features-scroll">
+          <div class="features-inner">
+            <div class="feature-line"><span>✦</span> Curated Collections</div>
+            <div class="feature-line"><span>✦</span> Exclusive Member Access</div>
+            <div class="feature-line"><span>✦</span> Free Returns · 30 Days</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="panel-right">
+      <div class="form-wrap" id="formWrap">
+        <span class="form-label">Member Access</span>
+        <h1 class="form-title">Welcome<br>Back.</h1>
+        <div class="form-title-line"></div>
+        <p class="form-subtitle">
+          Sign in to access your account and explore our curated collection of luxury pieces.
+        </p>
+
+        <div class="field">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+
+        <button class="btn-submit" id="loginBtn">Sign In</button>
+
+        <div class="msg" id="loginMsg"></div>
+
+        <div class="divider"><span>or</span></div>
+
+        <button class="btn-outline-form" id="logoutBtn">Sign Out</button>
+
+        <div class="back-row">
+          <a href="index.html">← Return to Store</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    // ── Particle canvas ──────────────────────────────────────────
+    (function(){
+      const canvas = document.getElementById('particles');
+      const ctx    = canvas.getContext('2d');
+      let W, H, particles;
+
+      function resize(){
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      class Particle{
+        constructor(){this.reset(true);}
+        reset(init){
+          this.x  = Math.random()*W;
+          this.y  = init ? Math.random()*H : H + 10;
+          this.r  = Math.random()*1.2 + 0.3;
+          this.vy = -(Math.random()*0.4 + 0.1);
+          this.vx = (Math.random()-0.5)*0.3;
+          this.alpha = Math.random()*0.4 + 0.1;
+          this.life  = 0;
+          this.maxLife = Math.random()*300 + 200;
+        }
+        update(){
+          this.x  += this.vx;
+          this.y  += this.vy;
+          this.life++;
+          if(this.life > this.maxLife || this.y < -10) this.reset(false);
+        }
+        draw(){
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(201,169,110,${this.alpha * (1 - this.life/this.maxLife)})`;
+          ctx.fill();
+        }
+      }
+
+      particles = Array.from({length:60}, () => new Particle());
+
+      function loop(){
+        ctx.clearRect(0,0,W,H);
+        particles.forEach(p => {p.update(); p.draw();});
+        requestAnimationFrame(loop);
+      }
+      loop();
+    })();
+
+    // ── Form logic ───────────────────────────────────────────────
+    const loginBtn  = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginMsg  = document.getElementById('loginMsg');
+    const spinner   = document.getElementById('spinner');
+    const formWrap  = document.getElementById('formWrap');
+
+    // Trigger underline animation
+    setTimeout(() => formWrap.classList.add('visible'), 100);
+
+    function showMsg(type, text){
+      loginMsg.className = 'msg ' + type;
+      loginMsg.textContent = text;
+    }
+
+    loginBtn.addEventListener('click', async () => {
+      const email = document.getElementById('loginEmail').value.trim();
+      if(!email){ showMsg('error','Please enter your email address.'); return; }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Signing in…';
+      spinner.classList.add('show');
+
+      try {
+        await recordLogin(email);
+        showMsg('success', '✦ Welcome back! Redirecting…');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+      } catch(e){
+        showMsg('error','Connection error. Please try again.');
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Sign In';
+        spinner.classList.remove('show');
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await recordLogout();
+      showMsg('success','You have been signed out.');
+    });
+
+    document.getElementById('loginEmail').addEventListener('keydown', e => {
+      if(e.key === 'Enter') loginBtn.click();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart — NOIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="grain"></div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">Collections</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+    </div>
+    <a href="index.html" class="logo">NOIR</a>
+    <div class="nav-right">
+      <a href="#" class="nav-link">About</a>
+      <a href="admin-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="cart.html" class="nav-link cart-icon active">
+        <span>Cart</span>
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="page-hero" style="padding: 140px 0 60px;">
+    <h1 class="page-title">Your Cart</h1>
+  </div>
+
+  <section class="cart-section">
+    <div class="cart-layout" id="cart-layout">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>© 2024 NOIR Luxury. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function renderCart() {
+      const cart = getCart();
+      const layout = document.getElementById('cart-layout');
+
+      if (cart.length === 0) {
+        layout.innerHTML = `
+          <div class="cart-empty">
+            <p class="empty-icon">✦</p>
+            <h2>Your cart is empty</h2>
+            <p>Discover pieces crafted for those with discerning taste.</p>
+            <a href="shop.html" class="btn-primary" style="display:inline-block;margin-top:2rem;">Shop Now</a>
+          </div>
+        `;
+        return;
+      }
+
+      const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const shipping = subtotal >= 5000 ? 0 : 499;
+      const total = subtotal + shipping;
+
+      layout.innerHTML = `
+        <div class="cart-items">
+          <div class="cart-header-row">
+            <span>Product</span><span>Price</span><span>Qty</span><span>Total</span>
+          </div>
+          ${cart.map(item => `
+            <div class="cart-item" id="item-${item.id}">
+              <div class="cart-item-info">
+                <div class="cart-item-img" style="background:${item.bg};">${item.icon}</div>
+                <div>
+                  <p class="cart-item-name">${item.name}</p>
+                  <p class="cart-item-cat">${item.category}</p>
+                </div>
+              </div>
+              <p class="cart-item-price">₹${item.price.toLocaleString()}</p>
+              <div class="cart-qty-ctrl">
+                <button onclick="updateQty(${item.id}, -1)">−</button>
+                <span>${item.qty}</span>
+                <button onclick="updateQty(${item.id}, 1)">+</button>
+              </div>
+              <div class="cart-item-total-wrap">
+                <p class="cart-item-total">₹${(item.price * item.qty).toLocaleString()}</p>
+                <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="summary-row"><span>Subtotal</span><span>₹${subtotal.toLocaleString()}</span></div>
+          <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? '<em>Free</em>' : '₹' + shipping}</span></div>
+          <div class="summary-row summary-total"><span>Total</span><span>₹${total.toLocaleString()}</span></div>
+          ${shipping > 0 ? `<p class="free-ship-hint">Add ₹${(5000 - subtotal).toLocaleString()} more for free shipping</p>` : '<p class="free-ship-hint" style="color:#c9a96e;">✓ You qualify for free shipping!</p>'}
+          <button class="btn-primary" style="width:100%;margin-top:1.5rem;" onclick="checkout()">Proceed to Checkout</button>
+          <a href="shop.html" class="btn-outline" style="width:100%;margin-top:1rem;display:block;text-align:center;">Continue Shopping</a>
+        </div>
+      `;
+    }
+
+    function updateQty(id, delta) {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty = Math.max(1, item.qty + delta);
+        saveCart(cart);
+        updateCartCount();
+        renderCart();
+      }
+    }
+
+    function removeItem(id) {
+      let cart = getCart();
+      cart = cart.filter(i => i.id !== id);
+      saveCart(cart);
+      updateCartCount();
+      renderCart();
+    }
+
+    function checkout() {
+      alert('🎉 Order placed successfully!\n\nThank you for shopping at NOIR.\nYour order will be delivered in 3–5 business days.');
+      saveCart([]);
+      updateCartCount();
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

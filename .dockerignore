@@ -1,5 +1,11 @@
 .git
 .gitignore
+<<<<<<< HEAD
 Dockerfile
 .dockerignore
 README.md
+=======
+terraform-aws
+node_modules
+*.log
+>>>>>>> 6d83ebe (feat: NOIR e-commerce with CI/CD, Docker, K8s, live dashboard)
